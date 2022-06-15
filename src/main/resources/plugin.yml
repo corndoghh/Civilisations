@@ -1,0 +1,17 @@
+name: Civilisations
+version: '${project.version}'
+main: es.harleyhugh.civilisations.Civilisations
+api-version: 1.18
+authors: [ cornpop ]
+commands:
+  sudo:
+    usage: /sudo <player> command
+    description: runs command as a player
+  impersonate:
+    usage: /impersonate <player> -a(all) -s(skin) -v(voice) -c(commands)
+    description: impersonates a player in game
+    aliases: [im, ima, ims, imv, imc]
+
+  chat:
+
+  test:
