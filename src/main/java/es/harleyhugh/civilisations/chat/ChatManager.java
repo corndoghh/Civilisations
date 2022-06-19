@@ -2,11 +2,7 @@ package es.harleyhugh.civilisations.chat;
 
 import es.harleyhugh.civilisations.CPlayer;
 import es.harleyhugh.civilisations.Civilisations;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.md_5.bungee.api.ChatMessageType;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -17,18 +13,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static es.harleyhugh.civilisations.CPlayer.getInstance;
+import static es.harleyhugh.civilisations.chat.ChatGui.chatGui;
 
 public class ChatManager {
 
 
-    private final Civilisations plugin;
-
     private final YamlConfiguration chatYml;
     private final File chat;
 
-
     public ChatManager(Civilisations plugin){
-        this.plugin = plugin;
         chat = new File(plugin.getDataFolder(), "chats.yml");
         if (!chat.exists()) {
             try {
@@ -60,10 +53,16 @@ public class ChatManager {
             }
         }
 
-
         p.setChats(chats);
         p.setMaxChat(maxChat);
 
+    }
+
+    public void chatCleanUp(Player player, List<Chats> chats) {
+        for (Chats chat: chats) {
+            chat.removeFromPlayerList(player);
+        }
+        getInstance(player).remove();
     }
 
 
@@ -73,11 +72,11 @@ public class ChatManager {
 
         if (chatYml.contains(player.getUniqueId().toString())) {
             chats = chatYml.getStringList(player.getUniqueId().toString()).stream().map(Chats::valueOf).collect(Collectors.toList());
-            try {
-                chatYml.save(chat);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+//            try {
+//                chatYml.save(chat);
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
         } else {
             chats = Collections.singletonList(Chats.DEFAULT);
         }
@@ -114,4 +113,10 @@ public class ChatManager {
 
 
     }
+
+    public void openGui(Player player) {
+        player.openInventory(chatGui);
+    }
+
+
 }

@@ -19,10 +19,6 @@ public class Command implements Listener {
     @EventHandler
     public void onPlayerTab(PlayerCommandSendEvent e) {
         List<String> blockedCommands = plugin.getPermissionManager().getBlocked(e.getPlayer());
-        Bukkit.getLogger().info("re");
-        for (String blockedCommand: blockedCommands) {
-            Bukkit.getLogger().info(blockedCommand);
-        }
         e.getCommands().removeAll(blockedCommands);
     }
 

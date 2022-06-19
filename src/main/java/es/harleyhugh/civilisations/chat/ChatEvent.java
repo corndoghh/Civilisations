@@ -1,38 +1,65 @@
 package es.harleyhugh.civilisations.chat;
 
-import es.harleyhugh.civilisations.Civilisations;
-import io.papermc.paper.event.player.AsyncChatEvent;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import net.kyori.adventure.text.Component;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
-import static es.harleyhugh.civilisations.CPlayer.getInstance;
+public class ChatEvent extends Event implements Cancellable {
 
-public class ChatEvent implements Listener {
+    private static final HandlerList HANDLERS = new HandlerList();
 
-    private final Civilisations plugin;
+    private boolean cancelled;
+    private final Player player;
+    private final String messageOrigin;
+    private final Component message;
 
-    public ChatEvent(Civilisations plugin) {
-        this.plugin = plugin;
+    public ChatEvent(String messageOrigin, Component message, Player player) {
+        super(true);
+        cancelled = false;
+        this.player = player;
+        this.messageOrigin = messageOrigin;
+        this.message = message;
     }
 
-    @EventHandler
-    public void onJoin(PlayerJoinEvent j) {
-        plugin.getChatManager().loadPlayerChat(j.getPlayer());
+    public ChatEvent(String messageOrigin, Component message) {
+        cancelled = false;
+        this.player = null;
+        this.messageOrigin = messageOrigin;
+        this.message = message;
     }
 
-    @EventHandler
-    public void onLeave(PlayerQuitEvent q) {
-        getInstance(q.getPlayer()).remove();
+    @Override
+    public @NotNull HandlerList getHandlers() {
+        return HANDLERS;
     }
 
-    @EventHandler
-    public void onChatEvent(AsyncChatEvent c) {
-        c.setCancelled(true);
-
-        plugin.getChatManager().fireChat(c.getPlayer(), c.message());
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
     }
 
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        this.cancelled = cancel;
+    }
+
+    public Player getPlayer() {
+        return this.player;
+    }
+
+    public String getMessageOrigin() {
+        return this.messageOrigin;
+    }
+
+    public Component getMessage() {
+        return this.message;
+    }
 
 }

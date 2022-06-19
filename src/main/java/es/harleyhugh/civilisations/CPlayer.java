@@ -1,10 +1,8 @@
 package es.harleyhugh.civilisations;
 
 import es.harleyhugh.civilisations.chat.Chats;
-import es.harleyhugh.civilisations.commands.Chat;
-import net.kyori.adventure.text.Component;
+import es.harleyhugh.civilisations.rank.Ranks;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.units.qual.C;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +13,9 @@ public class CPlayer {
     private List<Chats> chats;
     private Chats maxChat;
     private UUID uuid;
-    private boolean test = false;
+    private Boolean test = false;
+    private List<Ranks> ranks;
+    private Ranks maxRank;
 
 
     private static final HashMap<UUID, CPlayer> uuidcPlayerHashMap = new HashMap<>();
@@ -44,6 +44,8 @@ public class CPlayer {
         uuidcPlayerHashMap.remove(this.uuid);
         this.chats = null;
         this.uuid = null;
+        this.test = null;
+        this.ranks = null;
     }
 
     public void setMaxChat(Chats chat) {
@@ -60,5 +62,25 @@ public class CPlayer {
 
     public boolean getTest() {
         return this.test;
+    }
+
+    public void setRank(List<Ranks> rank) {
+        this.ranks = rank;
+    }
+
+    public List<Ranks> getRank() {
+        return this.ranks;
+    }
+
+    public UUID getUuid() {
+        return this.uuid;
+    }
+
+    public void setMaxRank(Ranks maxRank) {
+        this.maxRank = maxRank;
+    }
+
+    public Ranks getMaxRank() {
+        return this.maxRank;
     }
 }
